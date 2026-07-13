@@ -23,7 +23,7 @@ const db = mysql.createPool({
 
 
 // GOOGLE SHEETS
-const SPREADSHEET_ID = '18N3FMJ6wtH1HHGpOB7YSvtevXutCcvWK3H4DZuBIFXo';
+const SPREADSHEET_ID = '1WbJ2oFZ_FVjHcEDQm-wjjU6OzhmYb3rNfTrFlNgB7-k';
 
 const auth = new google.auth.GoogleAuth({
     keyFile: 'bot-visualizar-eb624aabca80.json',
@@ -39,7 +39,7 @@ async function getSheets() {
 async function sheetBuscarLinha(sheets, numero) {
     const res = await sheets.spreadsheets.values.get({
         spreadsheetId: SPREADSHEET_ID,
-        range: 'Sheet2!A:A'
+        range: 'Bot-Chamados!A:A'
     });
 
     const rows = res.data.values || [];
@@ -56,7 +56,7 @@ async function sheetAdicionarChamado(numero, nome, rf, setor, problema) {
 
         await sheets.spreadsheets.values.append({
             spreadsheetId: SPREADSHEET_ID,
-            range: 'Sheet2!A:I',
+            range: 'Bot-Chamados!A:I',
             valueInputOption: 'USER_ENTERED',
             requestBody: {
                 values: [[
@@ -93,7 +93,7 @@ async function sheetAtualizarTecnico(numero, tecnico) {
         // Coluna G = técnico
         await sheets.spreadsheets.values.update({
             spreadsheetId: SPREADSHEET_ID,
-            range: `Sheet2!F${sheetRow}:G${sheetRow}`,
+            range: `Bot-Chamados!F${sheetRow}:G${sheetRow}`,
             valueInputOption: 'USER_ENTERED',
             requestBody: {
                 values: [['em andamento', tecnico]]
@@ -123,7 +123,7 @@ async function sheetFecharChamado(numero, quemFechou) {
         // F=status, G=técnico (mantém), H=data abertura (mantém), I=data fechamento
         await sheets.spreadsheets.values.update({
             spreadsheetId: SPREADSHEET_ID,
-            range: `Sheet2!F${sheetRow}:I${sheetRow}`,
+            range: `Bot-Chamados!F${sheetRow}:I${sheetRow}`,
             valueInputOption: 'USER_ENTERED',
             requestBody: {
                 values: [['fechado', quemFechou, '', agora]]
@@ -610,7 +610,7 @@ client.on('message_create', async message => {
         await client.sendMessage(
             `${chamado.usuario}@c.us`,
             `🔄 Seu atendimento foi transferido.\n\n` +
-            `👨‍💻 Agora ${novoOperador.nome} está cuidando do seu chamado.`
+            `👨‍💻 Agora *${novoOperador.nome}* está cuidando do seu chamado.`
         );
 
         return message.reply(`✅ Chamado ${numeroChamado} transferido de ${tecnicoAntigoNome || 'ninguém'} para ${novoOperador.nome}!`);
@@ -675,7 +675,7 @@ client.on('message_create', async message => {
 
         await client.sendMessage(
             `${chamado.usuario}@c.us`,
-            `👨‍💻 ${tecnico} está cuidando do seu chamado.`
+            `👨‍💻 *${tecnico}* está cuidando do seu chamado.`
         );
 
         return;

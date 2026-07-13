@@ -9,7 +9,7 @@ const db = mysql.createPool({
     database: process.env.DB_NAME
 });
 
-const SPREADSHEET_ID = '18N3FMJ6wtH1HHGpOB7YSvtevXutCcvWK3H4DZuBIFXo';
+const SPREADSHEET_ID = '1WbJ2oFZ_FVjHcEDQm-wjjU6OzhmYb3rNfTrFlNgB7-k';
 
 const auth = new google.auth.GoogleAuth({
     keyFile: 'bot-visualizar-eb624aabca80.json',
@@ -37,7 +37,7 @@ async function migrar() {
     // Limpa dados mantendo cabeçalho
     await sheets.spreadsheets.values.clear({
         spreadsheetId: SPREADSHEET_ID,
-        range: 'Sheet2!A2:I'
+        range: 'Bot-Chamados!A2:I'
     });
 
     console.log('🧹 Planilha limpa. Inserindo dados...');
@@ -67,7 +67,7 @@ async function migrar() {
 
     await sheets.spreadsheets.values.append({
         spreadsheetId: SPREADSHEET_ID,
-        range: 'Sheet2!A2:I',
+        range: 'Bot-Chamados!A2:I',
         valueInputOption: 'USER_ENTERED',
         requestBody: { values: linhas }
     });
@@ -78,6 +78,6 @@ async function migrar() {
 }
 
 migrar().catch(err => {
-    console.error('❌ Erro na migração:', err.message);
+    console.error('❌ Erro na migração:', err);  // tira o .message para ver o erro completo
     process.exit(1);
 });
